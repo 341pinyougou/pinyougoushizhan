@@ -22,4 +22,7 @@ public interface BrandService {
     PageResult search(Integer pageNum, Integer pageSize, Brand brand);
 
     List<Map> selectOptionList();
+    //更新状态
+    void updateStatus(Long[] ids, String status);
+
 }
