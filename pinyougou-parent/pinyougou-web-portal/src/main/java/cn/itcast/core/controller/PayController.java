@@ -47,7 +47,9 @@ public class PayController {
                     x++;
                     if(x > 200){
                         //再次调用 微信服务器Api  关闭订单(同学写了)
-                        return new Result(false,"支付超时");
+                        //如果超时,关闭订单
+                        payService.closeNative(out_trade_no);
+                        return new Result(false,"二维码超时");
                     }
                 }else{
                     return new Result(true,"支付成功");
