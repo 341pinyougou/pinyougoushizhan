@@ -95,19 +95,14 @@
 			                              <td><input  type="checkbox"></td>			                              
 				                          <td>{{entity.orderId}}</td>
 									      <td>{{entity.payment}}</td>
-									      <td>{{entity.paymentType}}</td>
-									      <td>{{entity.status}}</td>
+									      <td>{{entity.paymentType==1?"在线支付":"货到付款"}}</td>
+									      <td>{{entity.status==1?"未付款":entity.status==2?"已付款":entity.status==3?"未发货":entity.status==4?"已发货":entity.status==5?"交易成功":entity.status==6?"交易关闭":entity.status==7?"待评价":""}}</td>
 									      <td>{{entity.createTime}}</td>
 									      <td>{{entity.paymentTime}}</td>
 									      <td>{{entity.userId}}</td>
-									      <td>{{entity.sourceType}}</td>
-		                                  <td>
-		                                  	<span>
-		                                  		{{status[entity.auditStatus]}}
-		                                  	</span>
-		                                  </td>		                                  
+									      <td>{{entity.sourceType==1?"app端":entity.sourceType==2?"pc端":entity.sourceType==3?"M端":entity.sourceType==4?"微信端":entity.sourceType==5?"手机qq端":""}}</td>
 		                                  <td class="text-center">
-		                                  	  <a class="btn bg-olive btn-xs" href="goods_edit.html#?id={{entity.id}}">修改</a>                                
+		                                  	  <a class="btn bg-olive btn-xs" href="#">修改</a>
 		                                  </td>
 			                          </tr>
 			                      </tbody>
