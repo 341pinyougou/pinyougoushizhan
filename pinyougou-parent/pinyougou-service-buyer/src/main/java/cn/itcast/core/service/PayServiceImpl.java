@@ -184,4 +184,34 @@ public class PayServiceImpl implements PayService {
         return null;
     }
 
+    //超时关闭订单
+    @Override
+    public void closeNative(String out_trade_no) {
+        String url = "https://api.mch.weixin.qq.com/pay/closeorder";
+        //请求Http请求  响应  使用Apache开发的 HttpClient  Http请求的客户端 Java代码写了一个浏览器  (模拟了浏览器)
+        HttpClient httpClient = new HttpClient(url);
+        //设置https协议
+        httpClient.setHttps(true);
+        //入参
+        Map<String,String> param = new HashMap<>();
+//        公众账号ID	appid	是	String(32)	wx8888888888888888	微信分配的公众账号ID（企业号corpid即为此appId）
+        param.put("appid",appid);
+//        商户号	mch_id	是	String(32)	1900000109	微信支付分配的商户号
+        param.put("mch_id",partner);
+//        商户订单号	out_trade_no	是	String(32)	1217752501201407033233368018	商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
+        param.put("out_trade_no",out_trade_no);
+//        随机字符串	nonce_str	是	String(32)	5K8264ILTKCH16CQ2502SI8ZNMTM67VS	随机字符串，不长于32位。推荐随机数生成算法
+        param.put("nonce_str", WXPayUtil.generateNonceStr());
+//        签名	sign	是	String(32)	C380BEC2BFD727A4B6845133519F3AD6	签名，详见签名生成算法
+        String xml = null;
+        try {
+            xml = WXPayUtil.generateSignedXml(param, partnerkey);
+            //设置入参
+            httpClient.setXmlParam(xml);
+            //POST提交
+            httpClient.post();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
