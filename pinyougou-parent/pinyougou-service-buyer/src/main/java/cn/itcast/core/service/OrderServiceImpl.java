@@ -5,11 +5,17 @@ import cn.itcast.core.dao.item.ItemDao;
 import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
+import cn.itcast.core.pojo.good.Brand;
+import cn.itcast.core.pojo.good.BrandQuery;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,5 +152,34 @@ public class OrderServiceImpl implements  OrderService {
 
 
 
+    }
+
+
+    //查询分页对象 条件
+    @Override
+    public PageResult search(Integer pageNum, Integer pageSize, Order order) {
+
+        //分页小助手
+        PageHelper.startPage(pageNum,pageSize);
+
+        //条件查询
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        //订单号条件查询
+        if (null!=order.getOrderId()&&!"".equals(order.getOrderId())){
+            criteria.andOrderIdEqualTo(order.getOrderId());
+        }
+        //商家名称  模糊查询
+        if (null!=order.getSellerId()&&!"".equals(order.getSellerId())){
+            criteria.andSellerIdLike("%"+order.getSellerId().trim()+"%");
+        }
+        //收件人条件查询
+        if (null!=order.getReceiver()&&!"".equals(order.getReceiver())){
+            criteria.andReceiverLike(order.getReceiver().trim());
+        }
+        //查询所有
+        Page<Order> page = (Page<Order>) orderDao.selectByExample(orderQuery);
+
+        return new PageResult(page.getTotal(),page.getResult());
     }
 }
