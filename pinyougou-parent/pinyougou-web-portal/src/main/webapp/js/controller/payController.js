@@ -8,7 +8,6 @@ app.controller('payController' ,function($scope ,$location,payService){
 				//显示订单号和金额   11.45     分  /100
 				$scope.money= (response.total_fee/100).toFixed(2);
 				$scope.out_trade_no=response.out_trade_no;//支付ID (订单ID的集合)  日志表的ID
-				
 				//生成二维码
 				 var qr=new QRious({
 					    element:document.getElementById('qrious'),
@@ -31,7 +30,8 @@ app.controller('payController' ,function($scope ,$location,payService){
 					location.href="paysuccess.html#?money="+$scope.money;
 				}else{
 					if(response.message=='二维码超时'){
-						$scope.createNative();//重新生成二维码
+						alert("二维码失效")
+						//$scope.createNative();//重新生成二维码
 					}else{
 						location.href="payfail.html";
 					}
