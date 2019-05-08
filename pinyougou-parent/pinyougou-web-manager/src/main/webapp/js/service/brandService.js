@@ -31,4 +31,8 @@ app.service("brandService",function($http){
 	this.selectOptionList = function(){
 		return $http.get("../brand/selectOptionList.do");
 	}
+    //开始审核  审核通过 或是驳回
+    this.updateStatus = function(ids,status){
+        return $http.get('../brand/updateStatus.do?ids='+ids+"&status="+status);
+    }
 });

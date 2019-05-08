@@ -20,6 +20,18 @@ public class TypeTemplateController {
     @Reference
     private TypeTemplateService typeTemplateService;
 
+    //更新状态(审核通过或者是驳回)
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status){
+
+        try {
+            typeTemplateService.updateStatus(ids,status);
+            return new Result(true,"更新成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"更新失败");
+        }
+    }
     //查询
     @RequestMapping("/search")
     public PageResult search(Integer page, Integer rows, @RequestBody TypeTemplate typeTemplate){

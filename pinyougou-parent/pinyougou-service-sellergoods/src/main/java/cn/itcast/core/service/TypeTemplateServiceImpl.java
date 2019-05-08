@@ -5,6 +5,7 @@ import cn.itcast.core.dao.template.TypeTemplateDao;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
 import cn.itcast.core.pojo.template.TypeTemplate;
+import cn.itcast.core.pojo.template.TypeTemplateQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -40,10 +41,10 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
             //品牌结果集  [{"id":35,"text":"牛栏山"},{"id":36,"text":"剑南春"},{"id":39,"text":"口子窑"}]
             List<Map> brandList = JSON.parseArray(template.getBrandIds(), Map.class);
-            redisTemplate.boundHashOps("brandList").put(template.getId(),brandList);
+            redisTemplate.boundHashOps("brandList").put(template.getId(), brandList);
             //规格结果集  [{"id":40,"text":"颜色"},{"id":41,"text":"衣服尺码"}]
             List<Map> specList = findBySpecList(template.getId());
-            redisTemplate.boundHashOps("specList").put(template.getId(),specList);
+            redisTemplate.boundHashOps("specList").put(template.getId(), specList);
 
 
         }
@@ -98,9 +99,27 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
             // query.createCriteria().andSpecIdEqualTo((long)(Integer)(map.get("id")));
             query.createCriteria().andSpecIdEqualTo(Long.parseLong(String.valueOf(map.get("id"))));
             List<SpecificationOption> specificationOptions = specificationOptionDao.selectByExample(query);
-            map.put("options",specificationOptions);
+            map.put("options", specificationOptions);
         }
 
         return specList;
+    }
+
+    /**
+     * 进行更新状态
+     *
+     * @param ids
+     * @param status
+     */
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+//        创建一个模板对象
+        TypeTemplate typeTemplate = new TypeTemplate();
+//        将状态存入到这个typeTemplate对象中.
+        typeTemplate.setStatus(status);
+        for (Long id : ids) {
+            typeTemplate.setId(id);
+            typeTemplateDao.updateByPrimaryKeySelective(typeTemplate);
+        }
     }
 }
