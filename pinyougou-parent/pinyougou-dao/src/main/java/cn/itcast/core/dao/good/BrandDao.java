@@ -30,6 +30,5 @@ public interface BrandDao {
 
     int updateByPrimaryKey(Brand record);
 
-    //查询所有品牌 List<Map>
     List<Map> selectOptionList();
 }

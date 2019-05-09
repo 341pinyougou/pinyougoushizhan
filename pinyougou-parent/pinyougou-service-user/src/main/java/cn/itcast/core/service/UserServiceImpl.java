@@ -4,6 +4,9 @@ import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -32,6 +35,7 @@ public class UserServiceImpl implements  UserService {
     private Destination smsDestination;
     @Autowired
     private UserDao userDao;
+
     //发送验证码
     @Override
     public void sendCode(String phone) {
@@ -94,6 +98,52 @@ public class UserServiceImpl implements  UserService {
             throw new RuntimeException("验证码过期");
         }
 
+    }
+
+    //查询所有用户
+    public List<User> findAll() {
+        List<User> userList = userDao.selectByExample(null);
+        return userList;
+    }
+
+
+    //条件查询
+    public PageResult search(Integer pageNum, Integer pageSize, User user) {
+
+        //分页小助手
+        PageHelper.startPage(pageNum, pageSize);
+
+        //查询条件
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+
+        //判断查询条件
+        //状态
+        if(null != user.getStatus() && !"".equals(user.getStatus().trim())){
+            criteria.andStatusEqualTo(user.getStatus().trim());
+        }
+        //用户名称
+        if(null != user.getUsername() && !"".equals(user.getUsername().trim())){
+            criteria.andUsernameLike("%" + user.getUsername().trim() + "%");
+        }
+        //查询所有
+        Page<User> page = (Page<User>) userDao.selectByExample(userQuery);
+
+        return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    //更新状态
+    public void updateStatus(Long[] ids, String status) {
+         //创建用户对象
+        User user = new User();
+        //设置审核状态
+        user.setStatus(status);
+        //遍历
+        for (Long id : ids) {
+            //修改用户的状态
+            user.setId(id);
+            userDao.updateByPrimaryKeySelective(user);
+        }
     }
 
     //完善用户信息

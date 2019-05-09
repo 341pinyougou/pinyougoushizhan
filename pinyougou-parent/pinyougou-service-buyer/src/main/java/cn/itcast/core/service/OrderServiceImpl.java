@@ -5,20 +5,26 @@ import cn.itcast.core.dao.item.ItemDao;
 import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
+import cn.itcast.core.pojo.good.Brand;
+import cn.itcast.core.pojo.good.BrandQuery;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderItemQuery;
+import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
+import vo.OrderAndOrderItemVo;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 订单管理
@@ -144,6 +150,57 @@ public class OrderServiceImpl implements  OrderService {
         //redisTemplate.boundHashOps("CART").delete(order.getUserId());
         //删除购物车中已经购买的商品
 
+
+
+    }
+
+
+    //查询分页对象 条件
+    @Override
+    public PageResult search(Integer pageNum, Integer pageSize, Order order) {
+
+        //分页小助手
+        PageHelper.startPage(pageNum,pageSize);
+
+        //条件查询
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        //订单号条件查询
+        if (null!=order.getOrderId()&&!"".equals(order.getOrderId())){
+            criteria.andOrderIdEqualTo(order.getOrderId());
+        }
+        //商家名称  模糊查询
+        if (null!=order.getSellerId()&&!"".equals(order.getSellerId())){
+            criteria.andSellerIdLike("%"+order.getSellerId().trim()+"%");
+        }
+        //收件人条件查询
+        if (null!=order.getReceiver()&&!"".equals(order.getReceiver())){
+            criteria.andReceiverLike(order.getReceiver().trim());
+        }
+        //查询所有
+        Page<Order> page = (Page<Order>) orderDao.selectByExample(orderQuery);
+
+        return new PageResult(page.getTotal(),page.getResult());
+    }
+    //订单发货
+    @Override
+    public List<OrderAndOrderItemVo> findOrderAndOrderItem(String name) {
+
+        ArrayList<OrderAndOrderItemVo> list = new ArrayList<>();
+        OrderQuery orderQuery = new OrderQuery();
+        orderQuery.createCriteria().andSellerIdEqualTo(name);
+        List<Order> orderList = orderDao.selectByExample(orderQuery);
+
+        for (Order order : orderList) {
+            OrderAndOrderItemVo orderAndOrderItemVo = new OrderAndOrderItemVo();
+            OrderItemQuery orderItemQuery = new OrderItemQuery();
+            orderItemQuery.createCriteria().andOrderIdEqualTo(order.getOrderId());
+            List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
+            orderAndOrderItemVo.setOrderId(order.getOrderId());
+            orderAndOrderItemVo.setOrderItemList(orderItemList);
+            list.add(orderAndOrderItemVo);
+        }
+        return list;
 
 
     }
