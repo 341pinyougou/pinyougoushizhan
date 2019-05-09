@@ -33,5 +33,16 @@ app.service('userService',function($http){
 	this.sendCode=function(phone){
 		return $http.get('../user/sendCode.do?phone='+phone);
 	}
+
+	//保存用户信息
+	this.updateMSG=function(entity){
+		return $http.post('/user/perfectionMessage.do',entity);
+	}
+
+	//回显用户信息
+	this.findVO=function () {
+		return $http.get('/user/findVO.do');
+    }
+
 	
 });

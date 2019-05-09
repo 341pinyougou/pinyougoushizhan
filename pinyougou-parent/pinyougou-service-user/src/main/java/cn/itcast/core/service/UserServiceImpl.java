@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.*;
@@ -145,5 +144,27 @@ public class UserServiceImpl implements  UserService {
             user.setId(id);
             userDao.updateByPrimaryKeySelective(user);
         }
+    }
+
+    //完善用户信息
+    @Override
+    public void perfectionMessage(User user) {
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+        criteria.andUsernameEqualTo(user.getUsername());
+        try {
+            userDao.updateByExampleSelective(user,userQuery);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //回显用户信息
+    @Override
+    public User findVO(String name) {
+        UserQuery userQuery = new UserQuery();
+        userQuery.createCriteria().andUsernameEqualTo(name);
+        List<User> userList = userDao.selectByExample(userQuery);
+        return userList.get(0);
     }
 }

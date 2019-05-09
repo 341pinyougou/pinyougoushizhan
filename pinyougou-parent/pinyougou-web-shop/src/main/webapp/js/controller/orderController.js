@@ -13,5 +13,15 @@ app.controller('orderController' ,function($scope,$controller,$location,orderSer
 			}			
 		);
 	}
+
+	//订单查询
+    $scope.findOrderAndOrderItem=function(){
+        orderService.findOrderAndOrderItem().success(
+            function(response){
+                $scope.list=response.rows;
+                $scope.paginationConf.totalItems=response.total;//更新总记录数
+            }
+        );
+    }
     
 });	
