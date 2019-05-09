@@ -22,8 +22,10 @@
     <result column="user_level" property="userLevel" jdbcType="INTEGER" />
     <result column="points" property="points" jdbcType="INTEGER" />
     <result column="experience_value" property="experienceValue" jdbcType="INTEGER" />
-    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
     <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="profession" property="profession" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -87,7 +89,7 @@
     <if test="fields == null" >
       id, username, password, phone, email, created, updated, source_type, nick_name, name, 
       status, head_pic, qq, account_balance, is_mobile_check, is_email_check, sex, user_level, 
-      points, experience_value, birthday, last_login_time
+      points, experience_value, birthday, last_login_time, address, profession
     </if>
     <if test="fields != null" >
       ${fields}
@@ -109,7 +111,7 @@
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
-    id,username,password,phone,email,created,updated,source_type,nick_name,name,status,head_pic,qq,account_balance,is_mobile_check,is_email_check,sex,user_level,points,experience_value,birthday,last_login_time
+    id,username,password,phone,email,created,updated,source_type,nick_name,name,status,head_pic,qq,account_balance,is_mobile_check,is_email_check,sex,user_level,points,experience_value,birthday,last_login_time,address,profession
     from tb_user
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -131,15 +133,17 @@
       qq, account_balance, is_mobile_check, 
       is_email_check, sex, user_level, 
       points, experience_value, birthday, 
-      last_login_time)
+      last_login_time, address, profession
+      )
     values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
       #{updated,jdbcType=TIMESTAMP}, #{sourceType,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{headPic,jdbcType=VARCHAR}, 
       #{qq,jdbcType=VARCHAR}, #{accountBalance,jdbcType=DECIMAL}, #{isMobileCheck,jdbcType=VARCHAR}, 
       #{isEmailCheck,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{userLevel,jdbcType=INTEGER}, 
-      #{points,jdbcType=INTEGER}, #{experienceValue,jdbcType=INTEGER}, #{birthday,jdbcType=TIMESTAMP}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP})
+      #{points,jdbcType=INTEGER}, #{experienceValue,jdbcType=INTEGER}, #{birthday,jdbcType=VARCHAR}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.itcast.core.pojo.user.User" >
     insert into tb_user
@@ -210,6 +214,12 @@
       <if test="lastLoginTime != null" >
         last_login_time,
       </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="profession != null" >
+        profession,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -273,10 +283,16 @@
         #{experienceValue,jdbcType=INTEGER},
       </if>
       <if test="birthday != null" >
-        #{birthday,jdbcType=TIMESTAMP},
+        #{birthday,jdbcType=VARCHAR},
       </if>
       <if test="lastLoginTime != null" >
         #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="profession != null" >
+        #{profession,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -350,10 +366,16 @@
         experience_value = #{record.experienceValue,jdbcType=INTEGER},
       </if>
       <if test="record.birthday != null" >
-        birthday = #{record.birthday,jdbcType=TIMESTAMP},
+        birthday = #{record.birthday,jdbcType=VARCHAR},
       </if>
       <if test="record.lastLoginTime != null" >
         last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profession != null" >
+        profession = #{record.profession,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -382,8 +404,10 @@
       user_level = #{record.userLevel,jdbcType=INTEGER},
       points = #{record.points,jdbcType=INTEGER},
       experience_value = #{record.experienceValue,jdbcType=INTEGER},
-      birthday = #{record.birthday,jdbcType=TIMESTAMP},
-      last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP}
+      birthday = #{record.birthday,jdbcType=VARCHAR},
+      last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
+      address = #{record.address,jdbcType=VARCHAR},
+      profession = #{record.profession,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -449,10 +473,16 @@
         experience_value = #{experienceValue,jdbcType=INTEGER},
       </if>
       <if test="birthday != null" >
-        birthday = #{birthday,jdbcType=TIMESTAMP},
+        birthday = #{birthday,jdbcType=VARCHAR},
       </if>
       <if test="lastLoginTime != null" >
         last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="profession != null" >
+        profession = #{profession,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -478,8 +508,10 @@
       user_level = #{userLevel,jdbcType=INTEGER},
       points = #{points,jdbcType=INTEGER},
       experience_value = #{experienceValue,jdbcType=INTEGER},
-      birthday = #{birthday,jdbcType=TIMESTAMP},
-      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+      birthday = #{birthday,jdbcType=VARCHAR},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      profession = #{profession,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

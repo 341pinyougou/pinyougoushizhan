@@ -5,6 +5,7 @@ import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.service.UserService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import entity.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,5 +61,27 @@ public class UserController {
             return new Result(false, "注册失败");
         }
 
+    }
+
+    //完善用户信息
+    @RequestMapping("/perfectionMessage")
+    public Result perfectionMessage(@RequestBody User user){
+        try {
+            //获取当前登录用户名
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            user.setUsername(name);
+            userService.perfectionMessage(user);
+            return new Result(true,"修改成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"修改失败");
+        }
+    }
+
+    //回显用户信息
+    @RequestMapping("/findVO")
+    public User findVO(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.findVO(name);
     }
 }

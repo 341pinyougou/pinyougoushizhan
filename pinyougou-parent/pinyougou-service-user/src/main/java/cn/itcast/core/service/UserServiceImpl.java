@@ -2,17 +2,18 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.*;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -93,5 +94,27 @@ public class UserServiceImpl implements  UserService {
             throw new RuntimeException("验证码过期");
         }
 
+    }
+
+    //完善用户信息
+    @Override
+    public void perfectionMessage(User user) {
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+        criteria.andUsernameEqualTo(user.getUsername());
+        try {
+            userDao.updateByExampleSelective(user,userQuery);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //回显用户信息
+    @Override
+    public User findVO(String name) {
+        UserQuery userQuery = new UserQuery();
+        userQuery.createCriteria().andUsernameEqualTo(name);
+        List<User> userList = userDao.selectByExample(userQuery);
+        return userList.get(0);
     }
 }

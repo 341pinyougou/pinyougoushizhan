@@ -101,12 +101,22 @@ public class User implements Serializable {
     /**
      * 生日
      */
-    private Date birthday;
+    private String birthday;
 
     /**
      * 最后登录时间
      */
     private Date lastLoginTime;
+
+    /**
+     * 所在地
+     */
+    private String address;
+
+    /**
+     * 职业
+     */
+    private String profession;
 
     private static final long serialVersionUID = 1L;
 
@@ -270,12 +280,12 @@ public class User implements Serializable {
         this.experienceValue = experienceValue;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday == null ? null : birthday.trim();
     }
 
     public Date getLastLoginTime() {
@@ -284,6 +294,22 @@ public class User implements Serializable {
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession == null ? null : profession.trim();
     }
 
     @Override
@@ -314,6 +340,8 @@ public class User implements Serializable {
         sb.append(", experienceValue=").append(experienceValue);
         sb.append(", birthday=").append(birthday);
         sb.append(", lastLoginTime=").append(lastLoginTime);
+        sb.append(", address=").append(address);
+        sb.append(", profession=").append(profession);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -352,7 +380,9 @@ public class User implements Serializable {
             && (this.getPoints() == null ? other.getPoints() == null : this.getPoints().equals(other.getPoints()))
             && (this.getExperienceValue() == null ? other.getExperienceValue() == null : this.getExperienceValue().equals(other.getExperienceValue()))
             && (this.getBirthday() == null ? other.getBirthday() == null : this.getBirthday().equals(other.getBirthday()))
-            && (this.getLastLoginTime() == null ? other.getLastLoginTime() == null : this.getLastLoginTime().equals(other.getLastLoginTime()));
+            && (this.getLastLoginTime() == null ? other.getLastLoginTime() == null : this.getLastLoginTime().equals(other.getLastLoginTime()))
+            && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
+            && (this.getProfession() == null ? other.getProfession() == null : this.getProfession().equals(other.getProfession()));
     }
 
     @Override
@@ -381,6 +411,8 @@ public class User implements Serializable {
         result = prime * result + ((getExperienceValue() == null) ? 0 : getExperienceValue().hashCode());
         result = prime * result + ((getBirthday() == null) ? 0 : getBirthday().hashCode());
         result = prime * result + ((getLastLoginTime() == null) ? 0 : getLastLoginTime().hashCode());
+        result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
+        result = prime * result + ((getProfession() == null) ? 0 : getProfession().hashCode());
         return result;
     }
 }
