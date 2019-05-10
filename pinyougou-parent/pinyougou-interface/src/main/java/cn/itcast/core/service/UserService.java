@@ -18,4 +18,8 @@ public interface UserService {
 
     //更新状态
     void updateStatus(Long[] ids, String status);
+    //完善用户信息
+    void perfectionMessage(User user);
+    //回显用户信息
+    User findVO(String name);
 }

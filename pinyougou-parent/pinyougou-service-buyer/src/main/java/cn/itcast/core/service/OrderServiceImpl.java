@@ -11,6 +11,7 @@ import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -20,11 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
+import vo.OrderAndOrderItemVo;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 订单管理
@@ -181,5 +181,27 @@ public class OrderServiceImpl implements  OrderService {
         Page<Order> page = (Page<Order>) orderDao.selectByExample(orderQuery);
 
         return new PageResult(page.getTotal(),page.getResult());
+    }
+    //订单发货
+    @Override
+    public List<OrderAndOrderItemVo> findOrderAndOrderItem(String name) {
+
+        ArrayList<OrderAndOrderItemVo> list = new ArrayList<>();
+        OrderQuery orderQuery = new OrderQuery();
+        orderQuery.createCriteria().andSellerIdEqualTo(name);
+        List<Order> orderList = orderDao.selectByExample(orderQuery);
+
+        for (Order order : orderList) {
+            OrderAndOrderItemVo orderAndOrderItemVo = new OrderAndOrderItemVo();
+            OrderItemQuery orderItemQuery = new OrderItemQuery();
+            orderItemQuery.createCriteria().andOrderIdEqualTo(order.getOrderId());
+            List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
+            orderAndOrderItemVo.setOrderId(order.getOrderId());
+            orderAndOrderItemVo.setOrderItemList(orderItemList);
+            list.add(orderAndOrderItemVo);
+        }
+        return list;
+
+
     }
 }

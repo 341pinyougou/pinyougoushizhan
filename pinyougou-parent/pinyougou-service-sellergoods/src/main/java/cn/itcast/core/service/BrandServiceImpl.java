@@ -42,14 +42,10 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public PageResult findPage(Integer pageNum, Integer pageSize) {
 
-
-
         //分页小助手
         PageHelper.startPage(pageNum,pageSize);
         //查询所有
         Page<Brand> page = (Page<Brand>) brandDao.selectByExample(null);
-
-
 
         return new PageResult(page.getTotal(),page.getResult());
     }
@@ -130,8 +126,19 @@ public class BrandServiceImpl implements BrandService {
     //查询返回值 为List<Map>
     @Override
     public List<Map> selectOptionList() {
-        //List<Brand> brandList = brandDao.selectByExample(null);
+
+        /*List<Map> brands = brandDao.selectByExample(null);
+
+        return brandDao.selectByExample(null);*/
         return brandDao.selectOptionList();
+    }
+    @Override
+    public List<Brand> selectOptionListShop() {
+
+        List<Brand> brands = brandDao.selectByExample(null);
+
+        return brandDao.selectByExample(null);
+        //return brandDao.selectOptionList();
     }
 
     @Override

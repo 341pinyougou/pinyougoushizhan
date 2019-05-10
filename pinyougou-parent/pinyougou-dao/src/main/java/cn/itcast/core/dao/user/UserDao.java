@@ -2,8 +2,9 @@ package cn.itcast.core.dao.user;
 
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.pojo.user.UserQuery;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserDao {
     int countByExample(UserQuery example);

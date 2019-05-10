@@ -2,6 +2,7 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
 import cn.itcast.core.dao.template.TypeTemplateDao;
+import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
 import cn.itcast.core.pojo.template.TypeTemplate;
@@ -64,6 +65,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     //添加
     @Override
     public void add(TypeTemplate typeTemplate) {
+        typeTemplate.setStatus("0");
         typeTemplateDao.insertSelective(typeTemplate);
     }
 
@@ -120,6 +122,20 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         for (Long id : ids) {
             typeTemplate.setId(id);
             typeTemplateDao.updateByPrimaryKeySelective(typeTemplate);
+        }
+    }
+
+    /**
+     * 删除 lb
+     *
+     * @param ids
+     */
+    public void delete(Long[] ids) {
+        TypeTemplate typeTemplate = new TypeTemplate();
+
+        for (Long id : ids) {
+            typeTemplate.setStatus("2");
+            typeTemplateDao.deleteByPrimaryKey(id);
         }
     }
 }
