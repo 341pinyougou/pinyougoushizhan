@@ -1,10 +1,12 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.dao.item.ItemDao;
+import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.order.OrderItem;
 import com.alibaba.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
@@ -70,6 +72,37 @@ public class CartServiceImpl implements CartService {
         //3:将老购物车再保存到缓存中
         redisTemplate.boundHashOps("CART").put(name,oldCartList);
 
+
+     /*   List<Goods> shoucang = (List<Goods>) redisTemplate.boundHashOps("shoucang").get(name);
+        if (shoucang!=null&&shoucang.size()>0){
+            *//*good;
+            good在不在集合中*//*
+            for (Goods goods : shoucang) {
+                if(goods.getId()==id){
+                    return;
+                }
+                else {
+                    *//*solr查询goods    使用前端的id   goods*//*
+                    shoucang.add(goods)
+                }
+            }
+        }
+        else {
+            new List<goods>;
+            redisTemplate.boundHashOps("shoucnag").put(name,goodsList);
+        }*/
+    }
+
+
+    @Override
+    public List<Item> getScListToRedis() {
+
+        return (List<Item>) redisTemplate.boundValueOps("shoucang").get();
+    }
+
+    @Override
+    public void addScListToRedis(List<Item> shoucang) {
+        redisTemplate.boundValueOps("shoucang").set(shoucang);
     }
 
     //从缓存中查询购物车集合
@@ -77,6 +110,7 @@ public class CartServiceImpl implements CartService {
     public List<Cart> findCartListFromRedis(String name) {
         return (List<Cart>) redisTemplate.boundHashOps("CART").get(name);
     }
+
 
     //将新购物车与缓存中的老购物车进行合并
     public List<Cart> mergeCartList(List<Cart> newCartList,List<Cart> oldCartList){

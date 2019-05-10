@@ -18,7 +18,7 @@ app.controller('cartController',function($scope,cartService){
             function(response){
                 if(response.flag){
                   $scope.list= JSON.parse(response.message)
-
+                    
                 }else {
                     //跳转的登录页面
                 }
