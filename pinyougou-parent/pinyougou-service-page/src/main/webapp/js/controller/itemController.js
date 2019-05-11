@@ -64,7 +64,7 @@ app.controller("itemController",function($scope,$http){
 	
 	//添加商品到购物车
 	$scope.addToCart=function(){
-		//alert('SKUID:'+$scope.sku.id );		
+		//alert('SKUID:'+$scope.sku.id );
 		
 		$http.get('http://localhost:9103/cart/addGoodsToCartList.do?itemId='
 				+$scope.sku.id+'&num='+$scope.num ,{'withCredentials':true} ).success(
@@ -78,6 +78,21 @@ app.controller("itemController",function($scope,$http){
 				);	
 		
 	}
-	
-	
+    //添加商品到我的收藏
+    $scope.addToShouCang=function(){
+       // alert('SKUID:'+$scope.sku.id );
+
+        $http.get('http://localhost:9104/cart/addToShouCang.do?itemId='
+            +$scope.sku.id ,{'withCredentials':true} ).success(
+            function(response){
+                if(response.flag){
+                	//alert(response.message);
+                    location.href='http://localhost:9104/home-person-collect.html';
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+
+    }
 });

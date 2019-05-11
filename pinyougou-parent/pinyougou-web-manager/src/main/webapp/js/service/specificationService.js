@@ -33,4 +33,11 @@ app.service('specificationService',function($http){
 	this.selectOptionList=function(){
 		return $http.get("../specification/selectOptionList.do");
 	}
+
+
+    //开始审核  审核通过或者是驳回
+    this.updateStatus=function(ids){
+        return $http.get('../specification/updateStatus.do?ids='+ids);
+    }
+
 });

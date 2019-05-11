@@ -25,4 +25,6 @@ public interface BrandService {
     //更新状态
     void updateStatus(Long[] ids, String status);
 
+    List<Brand> selectOptionListShop();
+
 }

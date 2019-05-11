@@ -10,9 +10,14 @@
 
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-seckillOrder.css" />
+
+	<script type="text/javascript" src="plugins/angularjs/angular.min.js"> </script>
+	<script type="text/javascript" src="js/base.js"> </script>
+	<script type="text/javascript" src="js/service/cartService.js"> </script>
+	<script type="text/javascript" src="js/controller/cartController.js"> </script>
 </head>
 
-<body>
+<body  ng-app="pinyougou" ng-controller="cartController" ng-init="findScList()">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -189,10 +194,12 @@ $(function(){
                             <h4>收藏的商品</h4>
                             <div class="goods-list">
                                 <ul class="yui3-g"  id="goods-list">
+
+									<div class="cart-item-list" ng-repeat="goods in list">
                                     <li class="yui3-u-1-4">
                                         <div class="list-wrap">
-                                            <div class="p-img"><img src="img/_/t.jpg" alt=''></div>
-                                            <div class="price"><strong><em>¥</em> <i>139.00</i></strong></div>
+                                            <div class="p-img"><img src={{goods.smallPic}}} alt=''></div>
+                                            <div class="price"><strong><em>¥</em> <i>{{goods.price}}}</i></strong></div>
                                             <div class="attr"><em>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</em></div>
                                             <div class="cu"><em><span>促</span>满一件可参加超值换购</em></div>
                                             <div class="operate">
@@ -202,7 +209,7 @@ $(function(){
                                             </div>
                                         </div>
                                     </li >
-                                      <li class="yui3-u-1-4">
+                                     <!-- <li class="yui3-u-1-4">
                                         <div class="list-wrap">
                                             <div class="p-img"><img src="img/_/t.jpg" alt=''></div>
                                             <div class="price"><strong><em>¥</em> <i>139.00</i></strong></div>
@@ -266,8 +273,11 @@ $(function(){
                                                 <a href="javascript:void(0);" class="sui-btn btn-bordered">降价通知</a>
                                             </div>
                                         </div>
-                                    </li >
+                                    </li >-->
+									</div>
                                 </ul>
+
+
                             </div>
                       
                         

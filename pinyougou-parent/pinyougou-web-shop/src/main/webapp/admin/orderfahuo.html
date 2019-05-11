@@ -42,10 +42,10 @@
 
                     <div class="box-body">
 
-                        <!-- 数据表格 -->
+                     <!--   &lt;!&ndash; 数据表格 &ndash;&gt;
                         <div class="table-box">
 
-                            <!--工具栏-->
+                            &lt;!&ndash;工具栏&ndash;&gt;
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
@@ -70,53 +70,93 @@
 									<button class="btn btn-default" ng-click="reloadList()">查询</button>                                    
                                 </div>
                             </div>
-                            <!--工具栏/-->
+                            &lt;!&ndash;工具栏/&ndash;&gt;
 
-			                  <!--数据列表-->
+			                  数据列表
 			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
 			                      <thead>
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
 			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
-			                              </th> 
-										  <th class="sorting_asc">商品ID</th>
+			                              </th>
+										  <th class="sorting_asc">订单ID</th>
 									      <th class="sorting">商品名称</th>
 									      <th class="sorting">商品价格</th>
 									      <th class="sorting">一级分类</th>
 									      <th class="sorting">二级分类</th>
 									      <th class="sorting">三级分类</th>
-									      <th class="sorting">状态</th>									     						
+									      <th class="sorting">状态</th>
 					                      <th class="text-center">操作</th>
 			                          </tr>
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox"></td>			                              
-				                          <td>{{entity.id}}</td>
-									      <td>{{entity.goodsName}}</td>
-									      <td>{{entity.price}}</td>
-									      <td>{{itemCatList[entity.category1Id]}}</td>
-									      <td>{{itemCatList[entity.category2Id]}}</td>
-									      <td>{{itemCatList[entity.category3Id]}}</td>
-		                                  <td>
-		                                  	<span>
-		                                  		{{status[entity.auditStatus]}}
-		                                  	</span>
-		                                  </td>		                                  
+
+			                              <td ><input  type="checkbox"></td>
+				                          <td>{{entity.orderId}}</td>
 		                                  <td class="text-center">
-		                                  	  <a class="btn bg-olive btn-xs" href="goods_edit.html#?id={{entity.id}}">修改</a>                                
+		                                  	  <a class="btn bg-olive btn-xs" href="#">修改</a>
 		                                  </td>
+                                          <td ng-repeat="orderItem in entity.orderItemList track by $index">
+                                              <a>{{orderItem.goodsId}}</a>
+                                              <a>{{orderItem.num}}</a>
+                                          </td>
 			                          </tr>
-			                      </tbody>
 			                  </table>
-			                  <!--数据列表/-->                        
-							  
+			                  数据列表/
+
 							 
-                        </div>
+                        </div>-->
                         <!-- 数据表格 /-->
                         <!-- 分页 -->
+                        <div  ng-repeat="entity in list">
+
+
+                        <div class="choose-title" >
+                            <label data-toggle="checkbox" class="checkbox-pretty ">
+                                <input type="checkbox" checked="checked"><span>{{entity.createTime}}　订单编号：{{entity.orderId}}  店铺：341 <a>和我联系</a></span>
+                            </label>
+                            <a class="sui-btn btn-info share-btn">分享</a>
+                        </div>
+                        <table class="sui-table table-bordered order-datatable">
+                            <tbody>
+                            <tr ng-repeat="orderItem in entity.orderItemList track by $index">
+                                <td width="35%">
+                                    <div class="typographic"><img src="img/goods.png" />
+                                        <a href="#" class="block-text">{{orderItem.title}}</a>
+                                    </div>
+                                </td>
+                                <td width="5%" class="center">
+                                    <ul class="unstyled">
+                                        <li class="o-price">价格:¥{{orderItem.price}}</li>
+                                    </ul>
+                                </td>
+                                <td width="5%" class="center">数量:{{orderItem.num}}</td>
+                                <td width="8%" class="center">
+
+                                </td>
+                                <td width="10%" class="center" >
+                                    <ul class="unstyled">
+                                        <li>价格:¥{{orderItem.price}}</li>
+                                        <li>（含运费：￥0.00）</li>
+                                    </ul>
+                                </td>
+
+                                <td width="10%" class="center">
+                                    <ul class="unstyled">
+                                        <a><li  class="sui-btn btn-info" ng-click="aaa(entity.orderId)">立即发货</li></a>
+                                        <li>取消订单</li>
+
+                                    </ul>
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
                         
                      </div>
+                    </div>
                     <!-- /.box-body -->
 		
 </body>

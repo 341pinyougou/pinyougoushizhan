@@ -5,6 +5,7 @@ import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.service.CartService;
 import cn.itcast.core.service.GoodsService;
+import cn.itcast.core.service.ItemCatService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -14,20 +15,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vo.Cart;
-import vo.GoodsVo;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 购物车管理
@@ -217,7 +213,57 @@ public class CartController {
 //        6:回显
         return cartList;
     }
+    @Reference
 
+    @RequestMapping("/addToShouCang")
+    //@CrossOrigin(origins = {"http://localhost:9003","http://localhost:9005"},allowCredentials = "true")
+    @CrossOrigin
+    public Result addToShouCang(Long itemId, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            //获取当前登陆人名称
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            //判断当前用户是否登陆  安全框架世界里 永久都是登陆  登陆了:显示你的用户名  未登陆:匿名登陆状态
+           /* if ("anonymousUser".equals(name)) {
+                return new Result(false, "您还未登陆");
+
+                }*/
+           //从内存中获取收藏对象
+          List<Item> shoucang=  cartService.getScListToRedis();
+
+
+            //3:没有 创建收藏集合
+            if (null == shoucang) {
+                shoucang = new ArrayList<>();
+            }
+
+            //根据库存ID 查询库存对象
+            /*goodservice.selece()
+            Item item = cartService.findItemById(itemId);
+            Goods newGoods = new Goods();
+            //商家ID
+            newGoods.setSellerId(item.getSellerId());
+            goods*/;
+
+            Item newitem = cartService.findItemById(itemId);
+            //添加订单详情集合到购物车中
+            //newItem.setOrderItemList(newOrderItemList);
+            //1)判断当前要追加的商品在收藏集合中是否已经存在 (商家)
+            int newIndexOf = shoucang.indexOf(newitem);//newIndexOf  -1 不存在  >=0 存在同时 角标 indexOf比较的是商家ID
+            if (-1 == newIndexOf) {
+                shoucang.add(newitem);
+            }
+            //把收藏添加到redis中
+            cartService.addScListToRedis(shoucang);
+
+
+            System.out.println("加入我的收藏");
+                return new Result(true, "加入收藏成功");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "加入收藏失败");
+        }
+        }
     //查询收藏集合
     @RequestMapping("/findScList")
     public Result findScList(HttpServletRequest request,HttpServletResponse response){
@@ -231,7 +277,7 @@ public class CartController {
 
              return new Result(false,"请登录");
         }
-        List<Goods> scListToRedis = goodsService.getScListToRedis();
+        List<Item> scListToRedis = cartService.getScListToRedis();
         String s = JSONArray.toJSONString(scListToRedis);
 
 //        6:回显

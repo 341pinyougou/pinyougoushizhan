@@ -3,6 +3,7 @@ package cn.itcast.core.controller;
 import cn.itcast.core.pojo.specification.Specification;
 import cn.itcast.core.service.SpecificationService;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.sun.org.apache.regexp.internal.RE;
 import entity.PageResult;
 import entity.Result;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,5 +69,27 @@ public class SpecificationController {
     @RequestMapping("/selectOptionList")
     public List<Map> selectOptionList(){
         return specificationService.selectOptionList();
+    }
+    @RequestMapping("/delete")
+    public Result delete(Long[] ids){
+        try {
+            specificationService.delete(ids);
+            return new Result(true,"成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"失败");
+        }
+
+    }
+    //商品审核改变状态 lb
+    @RequestMapping("/updateStatus")
+    public  Result updateStatus(Long[] ids){
+        try {
+            specificationService.updateStatus(ids);
+            return new Result(true,"改变状态成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"改变状态失败");
+        }
     }
 }

@@ -177,6 +177,13 @@
 									</li>
 								</ul>
 							</div>
+                            <div class="fl">
+                                <ul class="btn-choose unstyled">
+                                    <li>
+                                        <a  class="sui-btn  btn-danger addshopcar" ng-click="addToShouCang()">我的收藏</a>
+                                    </li>
+                                </ul>
+                            </div>
 						</div>
 					</div>
 				</div>

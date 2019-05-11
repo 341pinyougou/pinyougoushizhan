@@ -9,4 +9,7 @@ app.service('orderService',function($http){
     this.findOrderAndOrderItem=function(){
         return $http.post('../order/findOrderAndOrderItem.do');
     }
+    this.aaa=function(orderId){
+        return $http.post('../order/fahuo.do?orderId='+orderId);
+    }
 });

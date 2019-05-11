@@ -158,12 +158,18 @@ public class OrderServiceImpl implements  OrderService {
     //查询分页对象 条件
     @Override
     public PageResult search(Integer pageNum, Integer pageSize, Order order) {
-
         //分页小助手
         PageHelper.startPage(pageNum,pageSize);
-
-        //条件查询
         OrderQuery orderQuery = new OrderQuery();
+        if (order.getSellerId()!=null){
+            orderQuery.createCriteria().andSellerIdEqualTo(order.getSellerId());
+            List<Order> orderList = orderDao.selectByExample(orderQuery);
+            if (orderList!=null&&orderList.size()!=0){
+                Page<Order> page = (Page<Order>)orderList;
+                return new PageResult(page.getTotal(),page.getResult());
+            }
+        }
+        //条件查询
         OrderQuery.Criteria criteria = orderQuery.createCriteria();
         //订单号条件查询
         if (null!=order.getOrderId()&&!"".equals(order.getOrderId())){
@@ -182,7 +188,7 @@ public class OrderServiceImpl implements  OrderService {
 
         return new PageResult(page.getTotal(),page.getResult());
     }
-    //订单发货
+    //订单发货显示回显
     @Override
     public List<OrderAndOrderItemVo> findOrderAndOrderItem(String name) {
 
@@ -197,11 +203,21 @@ public class OrderServiceImpl implements  OrderService {
             orderItemQuery.createCriteria().andOrderIdEqualTo(order.getOrderId());
             List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
             orderAndOrderItemVo.setOrderId(order.getOrderId());
+            orderAndOrderItemVo.setCreateTime(order.getCreateTime());
             orderAndOrderItemVo.setOrderItemList(orderItemList);
             list.add(orderAndOrderItemVo);
         }
         return list;
 
 
+    }
+     //发货
+    @Override
+    public void fahuo(Long orderId) {
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setConsignTime(new Date());
+
+        orderDao.updateByPrimaryKeySelective(order);
     }
 }

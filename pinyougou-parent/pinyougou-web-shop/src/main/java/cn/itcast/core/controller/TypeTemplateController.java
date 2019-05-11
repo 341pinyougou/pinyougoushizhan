@@ -39,7 +39,7 @@ public class TypeTemplateController {
             return new Result(false,"失败");
         }
     }
-    //添加
+    //修改
     @RequestMapping("/update")
     public Result update(@RequestBody TypeTemplate typeTemplate){
         try {
@@ -61,6 +61,19 @@ public class TypeTemplateController {
     @RequestMapping("/findBySpecList")
     public List<Map> findBySpecList(Long id){
         return typeTemplateService.findBySpecList(id);
+    }
+
+    //删除
+    @RequestMapping("/delete")
+    public Result delete(Long[] ids){
+        try {
+            System.out.println(ids.toString());
+            typeTemplateService.delete(ids);
+            return new Result(true,"成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"失败");
+        }
     }
 
 }
