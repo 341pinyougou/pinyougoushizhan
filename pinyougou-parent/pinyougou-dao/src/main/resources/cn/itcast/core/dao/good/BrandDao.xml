@@ -198,4 +198,11 @@
       audit_status = #{auditStatus,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <!--  //查询所有品牌 List<Map>
+  List<Map> selectOptionList();-->
+  <select id="selectOptionList" resultType="map">
+    select id , name text from tb_brand
+  </select>
 </mapper>

@@ -9,6 +9,23 @@ app.controller('cartController',function($scope,cartService){
 			}
 		);
 	}
+	//查询收藏列表
+    $scope.findScList=function(){
+
+
+
+        cartService.findScList().success(
+            function(response){
+                if(response.flag){
+                  $scope.list= JSON.parse(response.message)
+
+                }else {
+                    //跳转的登录页面
+                }
+
+            }
+        );
+    }
 	
 	//数量加减
 	$scope.addGoodsToCartList=function(itemId,num){
@@ -22,7 +39,20 @@ app.controller('cartController',function($scope,cartService){
 			}		
 		);		
 	}
-	
+
+	/*//收藏数量加减
+    $scope.addToShouCang=function(itemId){
+        cartService.addToShouCang(itemId.success(
+            function(response){
+                if(response.flag){//如果成功
+                    $scope.findScList();//刷新列表
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+    }
+	*/
 
 	
 	//获取当前用户的地址列表

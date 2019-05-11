@@ -95,6 +95,25 @@ public class SpecificationServiceImpl implements SpecificationService {
     //查询所有规格
     @Override
     public List<Map> selectOptionList() {
-        return specificationDao.selectOptionList();
+        List<Map> maps = specificationDao.selectOptionList();
+        return  maps;
+    }
+
+    @Override
+    public void delete(Long[] ids) {
+        for (Long id : ids) {
+            specificationDao.deleteByPrimaryKey(id);
+        }
+    }
+
+    //审核通过改变状态
+    public void updateStatus(Long[] ids) {
+        Specification specification = new Specification();
+        specification.setStatus("1");
+
+        for (Long id : ids) {
+            specification.setId(id);
+            specificationDao.updateByPrimaryKeySelective(specification);
+        }
     }
 }
