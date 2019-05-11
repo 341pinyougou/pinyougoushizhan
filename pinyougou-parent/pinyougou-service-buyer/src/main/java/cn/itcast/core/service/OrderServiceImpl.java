@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
 import vo.MyOrder;
 import vo.OrderAndOrderItemVo;
+import vo.SellerOrderVo;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -206,7 +207,13 @@ public class OrderServiceImpl implements  OrderService {
 
     }
 
-   //查询未支付订单
+    @Override
+    public List<SellerOrderVo> findSellerOrder() {
+
+        return orderDao.findXL();
+    }
+
+    //查询未支付订单
     public List<MyOrder> findOrderitemList(String name) {
         //获取登陆人用户名
         OrderQuery orderQuery = new OrderQuery();
