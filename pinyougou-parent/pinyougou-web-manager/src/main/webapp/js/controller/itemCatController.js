@@ -1,5 +1,5 @@
  //控制层 
-app.controller('itemCatController' ,function($scope,$controller   ,itemCatService){	
+app.controller('itemCatController' ,function($scope,$controller,$http,itemCatService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -68,7 +68,9 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 	$scope.searchEntity={};//定义搜索对象 
 	
 	//搜索
-	$scope.search=function(page,rows){			
+	$scope.search = function(){
+		var page = $scope.paginationConf.currentPage;
+        var rows = $scope.paginationConf.itemsPerPage;
 		itemCatService.search(page,rows,$scope.searchEntity).success(
 			function(response){
 				$scope.list=response.rows;	
@@ -107,7 +109,22 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		
 		$scope.findByParentId(p_entity.id);
 	}
-	
+
+
+    // 商品分类审核
+    $scope.shenhe=function(status){
+        //获取选中的复选框
+        itemCatService.shenhe( $scope.selectIds,status).success(
+            function(response){
+                if(response.flag){
+                    $scope.reloadList();//刷新列表
+                    $scope.selectIds = [];
+                }
+            }
+        );
+    }
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
+
 	
 	
 	

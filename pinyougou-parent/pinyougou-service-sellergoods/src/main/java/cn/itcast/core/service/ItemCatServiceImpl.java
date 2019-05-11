@@ -5,11 +5,18 @@ import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.pojo.item.ItemCatQuery;
 import cn.itcast.core.pojo.item.ItemQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
+import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import vo.ItemCatListVo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品分类管理
@@ -49,4 +56,39 @@ public class ItemCatServiceImpl implements ItemCatService {
     public List<ItemCat> findAll() {
         return itemCatDao.selectByExample(null);
     }
+
+    //分页查询
+    public PageResult search(Integer page,Integer rows) {
+        PageHelper.startPage(page,rows);
+
+        ItemCatQuery itemCatQuery = new ItemCatQuery();
+        ItemCatQuery.Criteria criteria = itemCatQuery.createCriteria();
+
+        criteria.andStatusEqualTo("0");
+
+        Page<ItemCat> p = (Page<ItemCat>) itemCatDao.selectByExample(itemCatQuery);
+        return new PageResult(p.getTotal(),p.getResult());
+    }
+
+    //审核
+    public Result updateStatus(Long[] ids,String status) {
+        try {
+            ItemCat itemCat = new ItemCat();
+
+            if (null!=ids && ids.length>0) {
+                for (Long id : ids) {
+                    itemCat = itemCatDao.selectByPrimaryKey(id);
+                    itemCat.setStatus(status);
+                    itemCatDao.updateByPrimaryKey(itemCat);
+                }
+            }
+            return new Result(true,"操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"操作失败");
+        }
+
+    }
+
+
 }

@@ -3,6 +3,9 @@ package cn.itcast.core.controller;
 import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.service.ItemCatService;
 import com.alibaba.dubbo.config.annotation.Reference;
+import entity.PageResult;
+import entity.Result;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,4 +38,18 @@ public class ItemCatController {
     public List<ItemCat> findAll(){
         return itemCatService.findAll();
     }
+
+    @RequestMapping("/search")
+    public PageResult search(Integer page,Integer rows){
+        return itemCatService.search(page,rows);
+    }
+
+    @RequestMapping("/shenhe")
+    public Result search(Long[] ids,String status){
+        System.out.println(ids);
+        return itemCatService.updateStatus(ids,status);
+    }
+
+
+
 }
