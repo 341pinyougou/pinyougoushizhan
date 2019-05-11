@@ -8,7 +8,7 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <dubbo:protocol name="dubbo" port="20887"></dubbo:protocol> 
+    <dubbo:protocol name="dubbo" port="20889"></dubbo:protocol>
     
 	<dubbo:application name="buyer-service"/>  
     <dubbo:registry address="zookeeper://192.168.200.128:2181"/>

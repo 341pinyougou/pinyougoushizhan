@@ -21,11 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
+import vo.MyOrder;
 import vo.OrderAndOrderItemVo;
 import vo.SellerOrderVo;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -160,17 +160,10 @@ public class OrderServiceImpl implements  OrderService {
     //查询分页对象 条件
     @Override
     public PageResult search(Integer pageNum, Integer pageSize, Order order) {
+
         //分页小助手
         PageHelper.startPage(pageNum,pageSize);
-        OrderQuery orderQuery = new OrderQuery();
-        if (order.getSellerId()!=null){
-            orderQuery.createCriteria().andSellerIdEqualTo(order.getSellerId());
-            List<Order> orderList = orderDao.selectByExample(orderQuery);
-            if (orderList!=null&&orderList.size()!=0){
-                Page<Order> page = (Page<Order>)orderList;
-                return new PageResult(page.getTotal(),page.getResult());
-            }
-        }
+
         //条件查询
         OrderQuery orderQuery = new OrderQuery();
         OrderQuery.Criteria criteria = orderQuery.createCriteria();
@@ -206,7 +199,6 @@ public class OrderServiceImpl implements  OrderService {
             orderItemQuery.createCriteria().andOrderIdEqualTo(order.getOrderId());
             List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
             orderAndOrderItemVo.setOrderId(order.getOrderId());
-            orderAndOrderItemVo.setCreateTime(order.getCreateTime());
             orderAndOrderItemVo.setOrderItemList(orderItemList);
             list.add(orderAndOrderItemVo);
         }
@@ -214,18 +206,71 @@ public class OrderServiceImpl implements  OrderService {
 
 
     }
-     //发货
+
     @Override
-    public void fahuo(Long orderId) {
-        Order order = new Order();
-        order.setOrderId(orderId);
-        order.setConsignTime(new Date());
-
-        orderDao.updateByPrimaryKeySelective(order);
-    }
-
-    //查询订单和订单详情表
     public List<SellerOrderVo> findSellerOrder() {
+
         return orderDao.findXL();
     }
+
+    //查询未支付订单
+    public List<MyOrder> findOrderitemList(String name) {
+        //获取登陆人用户名
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        criteria.andUserIdEqualTo(name);
+        List<Order> orderList = orderDao.selectByExample(orderQuery);
+
+
+        ArrayList<MyOrder> list = new ArrayList<>();//
+        for (Order order : orderList) {
+            MyOrder myOrder = new MyOrder();
+            //未付款
+            if (order.getStatus().equals("1")){
+                myOrder.setCreateTime(order.getCreateTime()); //设置时间
+                myOrder.setOrderId(order.getOrderId());       //设置订单ID
+                myOrder.setSellerId(order.getSellerId());     //设置商家名称
+                myOrder.setPostfee(order.getPostFee());      //邮费
+
+                OrderItemQuery orderItemQuery = new OrderItemQuery();
+                Long orderId = order.getOrderId();
+                orderItemQuery.createCriteria().andOrderIdEqualTo(orderId);
+                List<OrderItem> orderItems = orderItemDao.selectByExample(orderItemQuery);//OrderId 查询 orderitem集合
+                myOrder.setOrderItemList(orderItems);
+
+                list.add(myOrder);
+            }
+        }
+        return list;
+    }
+    //查询全部订单
+    public List<MyOrder> findAllOrder(String name) {
+        //获取登陆人用户名
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        criteria.andUserIdEqualTo(name);
+        List<Order> orderList = orderDao.selectByExample(orderQuery);
+
+
+        ArrayList<MyOrder> list = new ArrayList<>();//
+        for (Order order : orderList) {
+            MyOrder myOrder = new MyOrder();
+               //查询全部
+                myOrder.setCreateTime(order.getCreateTime()); //设置时间
+                myOrder.setOrderId(order.getOrderId());       //设置订单ID
+                myOrder.setSellerId(order.getSellerId());     //设置商家名称
+                myOrder.setPostfee(order.getPostFee());      //邮费
+
+                OrderItemQuery orderItemQuery = new OrderItemQuery();
+                Long orderId = order.getOrderId();
+                orderItemQuery.createCriteria().andOrderIdEqualTo(orderId);
+                List<OrderItem> orderItems = orderItemDao.selectByExample(orderItemQuery);//OrderId 查询 orderitem集合
+                myOrder.setOrderItemList(orderItems);
+
+                list.add(myOrder);
+        }
+        return list;
+    }
+
+
 }

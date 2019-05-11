@@ -8,4 +8,15 @@ app.controller('indexController',function($scope,loginService){
 					}
 			);
 	}
+
+    //查询购物车列表
+    $scope.findAllOrder=function(){
+        loginService.findAllOrder().success(
+            function(response){
+            	alert("111");
+                $scope.orderItemList=response;
+            }
+        );
+    }
+
 });
