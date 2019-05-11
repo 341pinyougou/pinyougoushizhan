@@ -103,11 +103,6 @@ public class PayServiceImpl implements PayService {
 //        交易类型 	trade_type 	是 	String(16) 	JSAPI
         param.put("trade_type", "NATIVE");
 //
-
-
-
-
-
         try {
             String xml = WXPayUtil.generateSignedXml(param, partnerkey);
 //        签名 	sign 	是 	String(32) 	C380BEC2BFD727A4B6845133519F3AD6 	通过签名算法计算得出的签名值，详见签名生成算法
@@ -131,7 +126,6 @@ public class PayServiceImpl implements PayService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
