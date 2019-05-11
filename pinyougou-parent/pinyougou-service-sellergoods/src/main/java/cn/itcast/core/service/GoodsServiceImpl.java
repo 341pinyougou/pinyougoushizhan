@@ -20,6 +20,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.data.solr.core.query.SolrDataQuery;
@@ -313,6 +314,25 @@ public class GoodsServiceImpl implements GoodsService {
 
         }
 
+    }
+@Autowired
+private RedisTemplate redisTemplate;
+    @Override
+    public Goods selectGoodsbyItemID(Long itemId) {
+        Item item = itemDao.selectByPrimaryKey(itemId);
+
+        return goodsDao.selectByPrimaryKey(item.getGoodsId());
+    }
+
+    @Override
+    public List<Goods> getScListToRedis() {
+        return (List<Goods>) redisTemplate.boundValueOps("shoucang").get();
+
+    }
+
+    @Override
+    public void addScListToRedis(List<Goods> shoucang) {
+        redisTemplate.boundValueOps("shoucang").set(shoucang);
     }
 
     //给库存对象设置属性

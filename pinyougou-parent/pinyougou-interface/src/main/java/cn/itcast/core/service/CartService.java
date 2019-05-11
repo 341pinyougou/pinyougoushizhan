@@ -13,4 +13,9 @@ public interface CartService {
     void addCartListToRedis(List<Cart> cartList,String name);
 
     List<Cart> findCartListFromRedis(String name);
+
+
+    List<Item> getScListToRedis();
+
+    void addScListToRedis(List<Item> shoucang);
 }

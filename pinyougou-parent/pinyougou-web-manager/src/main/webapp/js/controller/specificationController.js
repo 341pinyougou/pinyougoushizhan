@@ -76,9 +76,21 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
 			}			
 		);
 	}
-	
-	
-	
+
+    $scope.status = ["未审核", "审核通过", "审核未通过"];
+    $scope.updateStatus=function () {
+        specificationService.updateStatus($scope.selectIds).success(
+            function(response){
+                if(response.flag){
+                    $scope.reloadList();//刷新列表
+                    $scope.selectIds=[];
+                }else{
+                    alert(response.message);
+                }
+            })
+    }
+
+
 	$scope.addTableRow = function(){
 		$scope.entity.specificationOptionList.push({});
 	}

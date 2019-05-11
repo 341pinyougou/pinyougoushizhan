@@ -1,7 +1,10 @@
 package cn.itcast.core.pojo.good;
 
+import cn.itcast.core.pojo.order.OrderItem;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Goods implements Serializable {
     /**
@@ -85,6 +88,7 @@ public class Goods implements Serializable {
     private String isDelete;
 
     private static final long serialVersionUID = 1L;
+    private List<OrderItem> orderItemList;
 
     public Long getId() {
         return id;
@@ -293,4 +297,6 @@ public class Goods implements Serializable {
         result = prime * result + ((getIsDelete() == null) ? 0 : getIsDelete().hashCode());
         return result;
     }
+
+
 }

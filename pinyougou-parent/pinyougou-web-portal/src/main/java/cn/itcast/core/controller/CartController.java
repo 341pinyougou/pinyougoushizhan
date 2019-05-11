@@ -1,25 +1,33 @@
 package cn.itcast.core.controller;
 
+import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.service.CartService;
+import cn.itcast.core.service.GoodsService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import entity.Result;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vo.Cart;
+import vo.GoodsVo;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 购物车管理
@@ -30,6 +38,8 @@ public class CartController {
 
     @Reference
     private CartService cartService;
+    @Reference
+    private GoodsService goodsService;
 
     //加入购物车
     //SpringMVC 4.2以上开始
@@ -206,5 +216,29 @@ public class CartController {
         }
 //        6:回显
         return cartList;
+    }
+
+    //查询收藏集合
+    @RequestMapping("/findScList")
+    public Result findScList(HttpServletRequest request,HttpServletResponse response){
+
+
+
+        //获取当前登陆人名称
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        //判断当前用户是否登陆  安全框架世界里 永久都是登陆  登陆了:显示你的用户名  未登陆:匿名登陆状态
+        if ("anonymousUser".equals(name)) {
+
+             return new Result(false,"请登录");
+        }
+        List<Goods> scListToRedis = goodsService.getScListToRedis();
+        String s = JSONArray.toJSONString(scListToRedis);
+
+//        6:回显
+         return new Result(true,s);
+    }
+    @RequestMapping("/demo01")
+    public void demo01(){
+        System.out.println("protal");
     }
 }
