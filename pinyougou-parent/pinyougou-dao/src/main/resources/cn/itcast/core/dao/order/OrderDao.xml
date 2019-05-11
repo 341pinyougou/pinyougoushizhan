@@ -117,6 +117,18 @@
     from tb_order
     where order_id = #{orderId,jdbcType=BIGINT}
   </select>
+  
+  <resultMap id="sellerOrder" type="vo.SellerOrderVo">
+    <id property="sellerId" column="seller_id"/>
+    <result property="payment" column="payment"/>
+  </resultMap>
+
+  <select id="findXL" resultMap="sellerOrder">
+    SELECT seller_id,SUM(payment) payment
+    from tb_order
+    GROUP BY seller_id
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from tb_order
     where order_id = #{orderId,jdbcType=BIGINT}

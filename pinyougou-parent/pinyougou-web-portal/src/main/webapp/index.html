@@ -18,9 +18,11 @@
     <!-- 引入分页相关的JS和CSS -->
     
     <script type="text/javascript" src="./js/base.js"></script>
+    <script type="text/javascript" src="js/service/itemCatService.js"></script>
     <script type="text/javascript" src="./js/service/contentService.js"></script>
+    <script type="text/javascript" src="js/controller/itemCatController.js"></script>
     <script type="text/javascript" src="./js/controller/contentController.js"></script>
-   
+
 </head>
 
 <body ng-app="pinyougou" ng-controller="contentController" ng-init="findByCategoryId(1)">
@@ -140,7 +142,23 @@
 			<div class="yui3-g SortList ">
 				<div class="yui3-u Left all-sort-list">
 					<div class="all-sort-list2">
-						<div class="item bo">
+
+						<div class="item" ng-app="pinyougou" ng-controller="itemCatController" ng-init="findItemCatList(0)">
+								<h3 ng-repeat="itemCat in itemCatlist"><a href="" ng-mouseover="findItemCatList2(itemCat.id)">{{itemCat.name}}</a></h3>
+								<div class="item-list clearfix" >
+									<div class="subitem">
+										<dl class="fore1" ng-repeat="itemCat2 in itemCatlist2">
+											<dt><a href="">{{itemCat2.list2.name}}</a></dt>
+											<dd >
+												<a href="" ng-repeat="itemCat3 in itemCat2.list3"><em>{{itemCat3.name}}</em></a>
+											</dd>
+										</dl>
+									</div>
+								</div>
+						</div>
+
+
+						<!--<div class="item bo">
 							<h3><a href="">图书、音像、数字商品</a></h3>
 							<div class="item-list clearfix">
 								<div class="subitem">
@@ -523,7 +541,7 @@
 						</div>
 						<div class="item">
 							<h3><a href="">箱包</a></h3>
-						</div>
+						</div>-->
 					</div>
 				</div>
 				

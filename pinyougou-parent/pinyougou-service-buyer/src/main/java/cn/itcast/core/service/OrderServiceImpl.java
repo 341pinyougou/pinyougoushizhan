@@ -22,8 +22,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
 import vo.OrderAndOrderItemVo;
+import vo.SellerOrderVo;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -203,5 +205,10 @@ public class OrderServiceImpl implements  OrderService {
         return list;
 
 
+    }
+
+    //查询订单和订单详情表
+    public List<SellerOrderVo> findSellerOrder() {
+        return orderDao.findXL();
     }
 }

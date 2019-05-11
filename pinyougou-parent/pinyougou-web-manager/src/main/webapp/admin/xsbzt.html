@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>销售分析</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="../plugins/echarts/echarts-all.js"></script>
+    <!--[if lte IE 8]>
+    <script src="excanvas.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div style="width: 50%">
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width: 800px;height:600px;" ></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        option = {
+            title : {
+                text: '销售分析(饼状图)',       //大标题
+                subtext: '',                //类似于副标题
+                x:'center'                 //标题位置   居中
+            },
+            tooltip : {
+                trigger: 'item',           //数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+                formatter: "{a} <br/>{b} : {c} ({d}%)"   //{a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）用于鼠标悬浮时对应的显示格式和内容
+            },
+            legend: {                           //图例组件。
+                orient: 'vertical',             //图例列表的布局朝向
+                x: 'left',
+                data:[]
+            },
+            series : [              //系列列表。每个系列通过 type 决定自己的图表类型
+                {
+                    name: '销售总金额',
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:
+                        []
+                    ,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        $.ajax({
+            type : "post",
+            async : false, //同步执行
+            url : '../order/findXS.do?&time='+ new Date().getTime(),
+            dataType : "json", //返回数据形式为json
+            success : function(result) {
+                    //初始化option.xAxis[0]中的data
+                    for(var i=0;i<result.length;i++){
+                    option.legend.data.push(result[i].sellerId);
+                }
+                    //初始化option.series[0]中的data
+                    for(var i=0;i<result.length;i++){
+                        option.series[0].data.push({'value':result[i].payment,'name':result[i].sellerId});
+                    }
+            },
+            error: function(errorMsg) {
+                alert("图表请求数据失败啦!");
+            }
+        })
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</div>
+</body>
+</html>
