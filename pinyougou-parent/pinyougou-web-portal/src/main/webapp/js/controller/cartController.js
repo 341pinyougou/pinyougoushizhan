@@ -21,6 +21,7 @@ app.controller('cartController',function($scope,cartService){
 
                 }else {
                     //跳转的登录页面
+
                 }
 
             }

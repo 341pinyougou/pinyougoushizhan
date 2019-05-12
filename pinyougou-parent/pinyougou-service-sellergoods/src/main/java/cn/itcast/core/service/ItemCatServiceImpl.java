@@ -47,6 +47,7 @@ public class ItemCatServiceImpl implements ItemCatService {
     //查询所有商品分类结果集
     @Override
     public List<ItemCat> findAll() {
+
         return itemCatDao.selectByExample(null);
     }
 }

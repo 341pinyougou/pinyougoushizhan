@@ -216,17 +216,17 @@ public class CartController {
     @Reference
 
     @RequestMapping("/addToShouCang")
-    //@CrossOrigin(origins = {"http://localhost:9003","http://localhost:9005"},allowCredentials = "true")
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:9003","http://localhost:9005"},allowCredentials = "true")
+    //@CrossOrigin
     public Result addToShouCang(Long itemId, HttpServletRequest request, HttpServletResponse response) {
         try {
             //获取当前登陆人名称
             String name = SecurityContextHolder.getContext().getAuthentication().getName();
             //判断当前用户是否登陆  安全框架世界里 永久都是登陆  登陆了:显示你的用户名  未登陆:匿名登陆状态
-           /* if ("anonymousUser".equals(name)) {
+            if ("anonymousUser".equals(name)) {
                 return new Result(false, "您还未登陆");
 
-                }*/
+                }
            //从内存中获取收藏对象
           List<Item> shoucang=  cartService.getScListToRedis();
 
@@ -236,13 +236,7 @@ public class CartController {
                 shoucang = new ArrayList<>();
             }
 
-            //根据库存ID 查询库存对象
-            /*goodservice.selece()
-            Item item = cartService.findItemById(itemId);
-            Goods newGoods = new Goods();
-            //商家ID
-            newGoods.setSellerId(item.getSellerId());
-            goods*/;
+
 
             Item newitem = cartService.findItemById(itemId);
             //添加订单详情集合到购物车中
@@ -273,18 +267,15 @@ public class CartController {
         //获取当前登陆人名称
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         //判断当前用户是否登陆  安全框架世界里 永久都是登陆  登陆了:显示你的用户名  未登陆:匿名登陆状态
-        if ("anonymousUser".equals(name)) {
+    /*    if ("anonymousUser".equals(name)) {
 
              return new Result(false,"请登录");
-        }
+        }*/
         List<Item> scListToRedis = cartService.getScListToRedis();
         String s = JSONArray.toJSONString(scListToRedis);
 
 //        6:回显
          return new Result(true,s);
     }
-    @RequestMapping("/demo01")
-    public void demo01(){
-        System.out.println("protal");
-    }
+
 }
