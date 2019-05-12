@@ -4,6 +4,7 @@ import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderQuery;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import vo.SellerOrderVo;
 
 public interface OrderDao {
     int countByExample(OrderQuery example);
@@ -27,4 +28,6 @@ public interface OrderDao {
     int updateByPrimaryKeySelective(Order record);
 
     int updateByPrimaryKey(Order record);
+
+    List<SellerOrderVo> findXL();
 }

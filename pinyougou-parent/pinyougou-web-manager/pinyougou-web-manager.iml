@@ -27,6 +27,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="pinyougou-interface" />
+    <orderEntry type="module" module-name="pinyougou-interface" />
     <orderEntry type="module" module-name="pinyougou-pojo" />
     <orderEntry type="module" module-name="pinyougou-common" />
     <orderEntry type="library" name="Maven: com.github.pagehelper:pagehelper:4.0.0" level="project" />
